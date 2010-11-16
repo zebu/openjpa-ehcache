@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	version="1.0">
+	<persistence-unit name="base" transaction-type="RESOURCE_LOCAL">
+		<class>com.twotigers.persistence.User</class>
+		<class>com.twotigers.persistence.ExpenseEvent</class>
+		<class>com.twotigers.persistence.ExpenseType</class>
+		<class>com.twotigers.persistence.Item</class>
+		<class>com.twotigers.persistence.Report</class>
+		<class>net.sf.ehcache.openjpa.datacache.PObject</class>
+		<class>net.sf.ehcache.openjpa.datacache.QObject</class>
+		<class>net.sf.ehcache.openjpa.datacache.SubQObject</class>
+	</persistence-unit>
+</persistence>
