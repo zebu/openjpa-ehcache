@@ -32,7 +32,7 @@
 					<!-- <includes>**/persistence/*.java</includes>-->
 					<addDefaultConstructor>true</addDefaultConstructor>
 					<enforcePropertyRestrictions>true</enforcePropertyRestrictions>
-					
+<!--					<persistenceXmlFile>META-INF/persistence.xml</persistenceXmlFile>-->
 				</configuration>
 				<executions>
 					<execution>
@@ -67,12 +67,12 @@
 			<releases><enabled>true</enabled></releases>
 			<snapshots><enabled>true</enabled></snapshots>
 		</repository>
-<!--		<repository>-->
-<!--			<id>terracotta-repository</id>-->
-<!--			<url>http://www.terracotta.org/download/reflector/snapshots</url>-->
-<!--			<releases><enabled>true</enabled></releases>-->
-<!--			<snapshots><enabled>true</enabled></snapshots>-->
-<!--		</repository>-->
+		<repository>
+			<id>terracotta-snapshots</id>
+			<url>http://www.terracotta.org/download/reflector/snapshots</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
 		<repository>
 			<id>sourceforge</id>
 			<url>http://oss.sonatype.org/content/repositories/sourceforge-releases/</url>
@@ -237,11 +237,15 @@
 		<artifactId>cglib</artifactId>
 		<version>2.2</version>
 	</dependency>
-   
-      <dependency>
-  <groupId>org.slf4j</groupId>
-  <artifactId>slf4j-log4j12</artifactId>
-  <version>1.6.1</version>
-</dependency>
+	<dependency>
+		<groupId>org.terracotta</groupId>
+		<artifactId>terracotta-toolkit-1.1-runtime</artifactId>
+		<version>2.0.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-log4j12</artifactId>
+		<version>1.6.1</version>
+	</dependency>
 	</dependencies>
 </project>

@@ -94,14 +94,18 @@ public class BaseJpaTest {
 	@Rollback(false)
 	public void CacheHit() {
 		// create user
-		User user = new User("firstName", "lastName", null, null, null);
-		userService.createUser(user);
+		//User user = new User("firstName", "lastName", null, null, null);
+		//userService.createUser(user);
 		
-//		for (int i=0; i<100; i++) {
-//			userService.findByName(user.getFirstName(), user.getLastName());
-//		}
+		for (int i=0; i<100; i++) {
+			userService.createUser(new User("firstName"+i, "lastName"+i, null, null, null));
+		}
 		
-		try { Thread.sleep(10000); } catch (InterruptedException e) { }
+		for (int i=0; i<100; i++) {
+			userService.findByName("firstName"+i, "lastName"+i);
+		}
+		
+		try { Thread.sleep(15000); } catch (InterruptedException e) { }
 	}
 	
 	@Test

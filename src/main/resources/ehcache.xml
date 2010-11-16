@@ -3,16 +3,31 @@
    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:noNamespaceSchemaLocation="ehcache.xsd">
  
-   <defaultCache
-      maxElementsInMemory="1000"
-      eternal="false"
-      overflowToDisk="false"
-      diskPersistent="false"
-      timeToIdleSeconds="1200"
-      timeToLiveSeconds="1200"
-      statistics="true">
-		<terracotta />
-   </defaultCache>
+	<defaultCache
+		maxElementsInMemory="0"
+		eternal="true"
+		overflowToDisk="false"
+		timeToIdleSeconds="12000"
+		timeToLiveSeconds="12000"
+		statistics="true">
+		<terracotta/>
+		
+	</defaultCache>
+    
+	<cache name="myCache"
+		maxElementsInMemory="10000"
+		eternal="true"
+		timeToIdleSeconds="18000"
+		timeToLiveSeconds="36000"
+		overflowToDisk="false"
+		clearOnFlush="false"
+		diskPersistent="false"
+		memoryStoreEvictionPolicy="LFU"
+		maxElementsOnDisk="10000"
+		diskExpiryThreadIntervalSeconds="120"
+		statistics="true">
+		<terracotta/>
+	</cache>
  
    <terracottaConfig url="localhost:9510" />
  
