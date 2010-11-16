@@ -5,12 +5,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.apache.openjpa.persistence.OpenJPAEntityManager;
+import org.apache.openjpa.persistence.OpenJPAEntityManagerFactory;
+import org.apache.openjpa.persistence.OpenJPAPersistence;
+import org.apache.openjpa.persistence.QueryResultCache;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,21 +95,25 @@ public class BaseJpaTest {
 	}
 
 	@Test
-	@Rollback(false)
+	@Rollback(true)
 	public void CacheHit() {
-		// create user
-		//User user = new User("firstName", "lastName", null, null, null);
-		//userService.createUser(user);
+		// verify a stored object is pulled from the cache
 		
-		for (int i=0; i<100; i++) {
-			userService.createUser(new User("firstName"+i, "lastName"+i, null, null, null));
-		}
+		User user = new User("firstName", "lastName", null, null, null);
+		assertFalse(em.contains(user));
+		userService.createUser(user);
+		//assertTrue(em.contains(user));
 		
-		for (int i=0; i<100; i++) {
-			userService.findByName("firstName"+i, "lastName"+i);
-		}
+		user = userService.findByName("firstName", "lastName");
+		assertTrue(em.contains(user));
+		assertNotNull(user);
+	}
+	
+	// verify a stale object throws ole when stored
+	@Test
+	@Rollback(true)
+	public void storeStaleObject() {
 		
-		try { Thread.sleep(15000); } catch (InterruptedException e) { }
 	}
 	
 	@Test
