@@ -30,6 +30,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 
+import net.sf.ehcache.CacheManager;
+
 import org.apache.openjpa.conf.OpenJPAConfiguration;
 import org.apache.openjpa.datacache.DataCache;
 import org.apache.openjpa.datacache.DataCacheManager;
@@ -40,6 +42,7 @@ import org.apache.openjpa.persistence.OpenJPAEntityManagerFactory;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
 import org.apache.openjpa.persistence.OpenJPAPersistence;
 import org.apache.openjpa.persistence.StoreCacheImpl;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,6 +58,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class TestEhCache {
     @PersistenceContext
 	private EntityManager em;
+    
+    @AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		CacheManager cacheManager = new CacheManager();
+		cacheManager.shutdown();
+	}
     
     /**
      * Verify that configuration matches expectation.

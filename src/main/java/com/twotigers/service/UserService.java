@@ -19,10 +19,8 @@ public class UserService {
 	@PersistenceContext
 	protected EntityManager em;
 	
-	public void createUser(User user) {
-		userDao.add(user);
-		//em.flush();
-	}
+	public void create(User user) { userDao.add(user); }
+	public void update(User user) { userDao.update(user); }
 	
 	public User findByName(String firstName, String lastName) {
 		return userDao.findByName(firstName, lastName);

@@ -41,7 +41,7 @@
 			<property name="jpaProperties">
 				<props>
 					<prop key="openjpa.DataCacheManager">ehcache</prop>
-<!--					<prop key="openjpa.QueryCache">true</prop>-->
+					<prop key="openjpa.QueryCache">false</prop>
 					<prop key="openjpa.Log">Tool=TRACE,SQL=INFO,RUNTIME=TRACE</prop>
 					<prop key="show_sql">true</prop>
 				</props>

@@ -7,10 +7,11 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.apache.openjpa.persistence.DataCache;
 
-@DataCache
+@DataCache(name = "userCache")
 @Entity
 @NamedQueries({
 @NamedQuery(name="findByEmail", query="select u from User u where u.email = :email"),
@@ -22,6 +23,9 @@ public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
+	
+	@Version
+	private long version;
 	
 	private String lastName;
     private String firstName;
@@ -94,6 +98,7 @@ public class User {
 		sb.append(" email:"); sb.append(email);
 		sb.append(" userid:"); sb.append(userid);
 		sb.append(" password:"); sb.append(password);
+		sb.append(" version:"); sb.append(version);
 		return sb;
 	}
 }
