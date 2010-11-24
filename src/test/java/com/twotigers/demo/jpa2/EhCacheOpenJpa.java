@@ -37,7 +37,7 @@ import com.twotigers.service.UserService;
  *  
  * -when in eclipse, junit process will not exit and has to be manually killed
  * 
- * -the persist test cases are failing in both BaseJpaTest and TestEhCache. This may be an issue with how the L2 cache is accessed
+ * -the persist test cases are failing in both EhCacheOpenJpa and TestEhCache. This may be an issue with how the L2 cache is accessed
  *
  */
 
