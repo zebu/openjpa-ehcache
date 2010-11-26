@@ -15,7 +15,8 @@ import org.apache.openjpa.persistence.DataCache;
 @Entity
 @NamedQueries({
 @NamedQuery(name="findByEmail", query="select u from User u where u.email = :email"),
-@NamedQuery(name="findByName", query="select u from User u where u.firstName = :firstName and u.lastName = :lastName")
+@NamedQuery(name="findByName", query="select u from User u where u.firstName = :firstName and u.lastName = :lastName"),
+@NamedQuery(name="deleteByName", query="delete from User u where u.firstName = :firstName and u.lastName = :lastName")
 })
 @Table(name="baseuser")
 public class User {

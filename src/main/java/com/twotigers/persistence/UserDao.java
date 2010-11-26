@@ -5,6 +5,8 @@ public interface UserDao {
 
 	public abstract void update(Object object);
 
+	public abstract void deleteByName(String firstName, String lastName);
+	
 	public abstract User findById(long id);
 
 	public abstract User findByEmail(String email);

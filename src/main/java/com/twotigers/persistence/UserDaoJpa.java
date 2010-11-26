@@ -28,6 +28,13 @@ public class UserDaoJpa implements UserDao {
 		em.merge(object);		
 	}
 	
+	public void deleteByName(String firstName, String lastName) {
+		Query q = em.createNamedQuery("deleteByName");
+		q.setParameter("firstName", firstName);
+		q.setParameter("lastName", lastName);
+		q.executeUpdate();
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.twotigers.demo.jpa2.UserDao#findById(long)
 	 */

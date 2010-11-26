@@ -21,6 +21,7 @@ public class UserService {
 	
 	public void create(User user) { userDao.add(user); }
 	public void update(User user) { userDao.update(user); }
+	public void deleteByName(String firstName, String lastName) { userDao.deleteByName(firstName, lastName); }
 	
 	public User findByName(String firstName, String lastName) {
 		return userDao.findByName(firstName, lastName);

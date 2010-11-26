@@ -10,7 +10,7 @@
 		timeToIdleSeconds="12000"
 		timeToLiveSeconds="12000"
 		statistics="true">
-		<terracotta/>
+<!--		<terracotta/>-->
 	</defaultCache>
     
 	<cache name="myCache"
@@ -25,7 +25,7 @@
 		maxElementsOnDisk="10000"
 		diskExpiryThreadIntervalSeconds="120"
 		statistics="true">
-		<terracotta/>
+<!--		<terracotta/>-->
 	</cache>
  
    <terracottaConfig url="localhost:9510" />

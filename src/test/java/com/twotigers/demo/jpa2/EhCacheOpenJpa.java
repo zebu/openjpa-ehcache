@@ -2,21 +2,16 @@ package com.twotigers.demo.jpa2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 
 import net.sf.ehcache.CacheManager;
 
-import org.apache.openjpa.conf.OpenJPAConfiguration;
 import org.apache.openjpa.datacache.DataCache;
-import org.apache.openjpa.meta.ClassMetaData;
-import org.apache.openjpa.meta.MetaDataRepository;
-import org.apache.openjpa.persistence.JPAFacadeHelper;
-import org.apache.openjpa.persistence.OpenJPAEntityManagerFactorySPI;
+import org.apache.openjpa.datacache.DataCachePCData;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +20,7 @@ import org.springframework.orm.jpa.JpaOptimisticLockingFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.att.bbnms.lightspeed.CacheUtils;
 import com.twotigers.persistence.User;
 import com.twotigers.service.UserService;
 
@@ -46,7 +42,7 @@ import com.twotigers.service.UserService;
 public class EhCacheOpenJpa {
 
 	@PersistenceContext
-	protected EntityManager em;
+	protected EntityManager entityManager;
 	
 	@Autowired
 	private UserService userService;
@@ -63,7 +59,7 @@ public class EhCacheOpenJpa {
 		User user = new User("dataCacheNameSpecified", "lastName", null, null, null);
 		userService.create(user);
 		
-		String cacheName = getConfiguredDataCacheName(User.class);
+		String cacheName = CacheUtils.getConfiguredDataCacheName(entityManager, User.class);
 		assertEquals("userCache", cacheName);
 	}
 	
@@ -71,15 +67,19 @@ public class EhCacheOpenJpa {
 	public void CacheHit() {
 		// verify a stored object is pulled from the cache
 		User user = new User("cacheHit", "lastName", null, null, null);
-		assertFalse(em.contains(user));
+		assertFalse(entityManager.contains(user));
 		userService.create(user);
 		Object oid = user.getId();
 		
 		// The transaction is committed so the em is empty.
-        assertFalse(em.contains(user));
+        assertFalse(entityManager.contains(user));
         
         // verify object is in L2 cache
-        assertTrue(getCache(user.getClass()).contains(getOpenJPAId(user, oid)));
+        assertTrue("Object does not exist in cache", CacheUtils.objectExistsInL2Cache(entityManager, user, oid));
+        
+//        User user2 = (User)CacheUtils.getObjectFromCache(entityManager, user, oid);
+//		assertNotNull(user2);
+//		assertEquals("cacheHit", user2.getFirstName());
 	}
 	
 	// verify a stale object throws ole when stored
@@ -99,38 +99,40 @@ public class EhCacheOpenJpa {
 		userService.update(staleUser);
 	}
 	
-	/**
-     * Gets the data cache for the given class.
-     */
-    DataCache getCache(Class<?> cls) {
-    	EntityManagerFactory emf = em.getEntityManagerFactory();
-    	OpenJPAConfiguration conf = ((OpenJPAEntityManagerFactorySPI) emf).getConfiguration();
-    	
-        String name = getConfiguredDataCacheName(cls);
-        return conf.getDataCacheManagerInstance().getDataCache(name);
-    }
-
-    /**
-     * Gest the configured name of the cache for the given class.
-     */
-    String getConfiguredDataCacheName(Class<?> cls) {
-    	EntityManagerFactory emf = em.getEntityManagerFactory();
-    	OpenJPAConfiguration conf = ((OpenJPAEntityManagerFactorySPI) emf).getConfiguration();
-    	
-        MetaDataRepository mdr = conf.getMetaDataRepositoryInstance();
-        ClassMetaData meta = mdr.getMetaData(cls, null, true);
-        return meta.getDataCacheName();
-    }
-
-    Object getOpenJPAId(Object pc, Object oid) {
-    	EntityManagerFactory emf = em.getEntityManagerFactory();
-    	OpenJPAConfiguration conf = ((OpenJPAEntityManagerFactorySPI) emf).getConfiguration();
-    	
-        ClassMetaData meta = conf.getMetaDataRepositoryInstance()
-                .getCachedMetaData(pc.getClass());
-        assertNotNull(meta);
-        Object ooid = JPAFacadeHelper.toOpenJPAObjectId(meta, oid);
-        assertNotNull(oid);
-        return ooid;
-    }
+	// verify a delete, removes object from cache
+	@Test
+	public void deleteObject() {
+		// create and delete user
+		User user = new User("delete", "lastName", null, null, null);
+		userService.create(user);
+		Object oid = user.getId();
+		
+		assertTrue("Object does not exist in cache", CacheUtils.objectExistsInL2Cache(entityManager, user, oid));
+		
+		userService.deleteByName("delete", "lastName");
+		assertNull(userService.findByName("delete", "lastName"));
+		assertFalse("Object should not exist in cache", CacheUtils.objectExistsInL2Cache(entityManager, user, oid));
+	}
+	
+	// verify an update, updates object in cache
+	@Test
+	public void updateObject() {
+		// create user
+		User user = new User("update", "lastName", null, null, null);
+		userService.create(user);
+		Object oid = user.getId();
+		
+		assertTrue("Object does not exist in cache", CacheUtils.objectExistsInL2Cache(entityManager, user, oid));
+		
+		user.setFirstName("update2");
+		userService.update(user);
+		
+		// TODO
+		// I can't figure out how to build an object out of a DataCachePCData
+		// Just checking a value for now
+		DataCachePCData dataCachePCData = CacheUtils.getObjectFromCache(entityManager, user, oid);
+		assertEquals("update2", dataCachePCData.getData(1));
+	}
+	
+	// verify objects timeout from cache
 }
