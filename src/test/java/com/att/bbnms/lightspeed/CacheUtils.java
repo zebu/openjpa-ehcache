@@ -1,6 +1,4 @@
 package com.att.bbnms.lightspeed;
-import static org.junit.Assert.assertNotNull;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 

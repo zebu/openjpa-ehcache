@@ -10,7 +10,6 @@ import javax.persistence.PersistenceContext;
 
 import net.sf.ehcache.CacheManager;
 
-import org.apache.openjpa.datacache.DataCache;
 import org.apache.openjpa.datacache.DataCachePCData;
 import org.junit.AfterClass;
 import org.junit.Test;
